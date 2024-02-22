@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const taskSchema =new mongoose.Schema({
     title: String,
     description: String,
-    assignedTo: { type: Schema.Types.ObjectId, ref: 'User' },
+    assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     createdDate: { type: Date, default: Date.now },
     dueDate: Date,
     etatStatus: {

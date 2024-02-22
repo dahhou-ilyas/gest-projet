@@ -1,8 +1,12 @@
 const router=require('express').Router();
 const userController=require('../controllers/userController')
 
-router.post('/users',userController.saveUser);
+router.post('/',userController.saveUser);
+router.post('/login',userController.login)
 //router.get('/users',userController.getAllUsers);
-router.get('/users/:userId',userController.getUser);
-router.put('/users/:userId',userController.updateUser);
-router.delete('/users/:userId',userController.deleteUser);
+router.get('/:userId',userController.getUser);
+router.get('/:userId/tasks',userController.getTasksForUser)
+router.put('/:userId',userController.updateUser);
+router.delete('/:userId',userController.deleteUser);
+
+module.exports = router;
