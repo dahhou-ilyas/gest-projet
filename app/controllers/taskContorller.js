@@ -64,11 +64,16 @@ module.exports={
     },
     addComment:async (req,res)=>{
         try {
+            const taskId = req.params.taskId;
+            const task = await Task.findById(taskId);
+            if (!task) {
+                return res.status(404).json({ message: 'Tâche non trouvée' });
+            }
             const { content, author } = req.body;
             const newComment = new Comment({
                 content,
                 author,
-                taskId: req.params.taskId
+                task: taskId
             });
             await newComment.save();
             res.status(201).json(newComment);
