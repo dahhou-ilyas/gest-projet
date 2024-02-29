@@ -12,7 +12,7 @@ const sendInvitationEmail=(recipientEmail, invitationLink)=>{
             pass:process.env.PASS
         },
     })
-
+//zaz
     const mailOptions={
         from:process.env.USER,
     }
