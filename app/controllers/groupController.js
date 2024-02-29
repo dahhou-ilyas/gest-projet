@@ -16,6 +16,7 @@ module.exports={
             group.invitationToken = invitationToken; // Enregistre le token dans le groupe
             await group.save();
 
+            const invitationLink = `http://localhost:8080/groups/invite?token=${invitationToken}`;
             // Envoi du lien d'invitation à l'utilisateur (par exemple, par e-mail)
             // Ici, vous enverrez l'e-mail contenant le lien avec le token d'invitation
             // Il peut ressembler à quelque chose comme : https://votresite.com/invite?token=<invitationToken>
