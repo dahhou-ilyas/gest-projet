@@ -1,13 +1,21 @@
 const mongoose=require('mongoose');
 const GroupSchema=new mongoose.Schema({
-    name:String,
-    users:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User'
+    name: {
+        type: String,
+        required: true
+    },
+    users: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }],
-    cretedBy:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User'
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    invitationToken: {
+        type: String,
+        unique: true
     }
 });
 

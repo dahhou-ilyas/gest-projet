@@ -5,7 +5,8 @@ const UserSchema=new mongoose.Schema({
     name: String,
     email: String,
     password: String,
-    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }]
+    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
+    groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }]
 })
 
 UserSchema.pre('save',async function(next){

@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const userRoute=require('./routes/userRoute')
 const taskRoute=require('./routes/taskRoute');
+const groupRoute=require('./routes/groupRoute');
 //
 const AuthenticateToken = require('./middleware/authenticateMiddl');
 const User=require('./model/User')
@@ -59,5 +60,6 @@ app.use(AuthenticateToken);
 
 app.use('/users',userRoute);
 app.use('/tasks',taskRoute);
+app.use('/groups',groupRoute)
 
 module.exports=app;
