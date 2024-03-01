@@ -28,3 +28,5 @@ const sendInvitationEmail=(recipientEmail, invitationLink)=>{
     });
 
 }
+
+module.exports = { sendInvitationEmail };
