@@ -33,19 +33,7 @@ GroupSchema.pre('save',async function (next){
     }
 })
 
-GroupSchema.methods.inviteUser=async function (userId){
-    try {
-        if(!this.users.includes(userId)){
-            this.users.push(userId);
-            await this.save();
-            return true;
-        }else{
-            return false;
-        }
-    } catch (error) {
-        throw error
-    }
-}
+
 
 const Group=mongoose.model('Group',GroupSchema);
 

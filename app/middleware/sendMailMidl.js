@@ -15,7 +15,7 @@ const sendInvitationEmail=(recipientEmail, invitationLink)=>{
     const mailOptions={
         from:process.env.USER,
         to: recipientEmail,
-        subject: 'Invitation au groupe',
+        subject: 'FLOW APPLICATION',
         text: `Vous avez été invité à rejoindre notre groupe ! Cliquez sur le lien suivant pour rejoindre : ${invitationLink}`
     }
 
