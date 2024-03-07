@@ -23,5 +23,23 @@ module.exports={
             console.error('Erreur lors de l\'ajout du projet à l\'utilisateur :', error);
             res.status(500).json({ error: 'Erreur serveur lors de l\'ajout du projet à l\'utilisateur' });
         }
+    },
+    getProject:async (req,res)=>{
+        const userId=req.params.userId;
+        try {
+            const user=User.findById(userId);
+            if(!user){
+                res.status(404).json({message:"user not found"});
+            }
+            const projects=Project.find({createdBy:userId});
+            if(!projects){
+                res.status(404).json({message:"not project for this user"});
+            }
+
+            res.status(200).json(projects)
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({error:"error in database"});
+        }
     }
 }
