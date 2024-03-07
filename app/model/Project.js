@@ -5,12 +5,17 @@ const ProjectSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    descriptionProjet:{
+        type:String,
+        required:true
+    },
     tasks:[{
         type:mongoose.Schema.Types.ObjectId,
         ref: 'Task'
     }],
     createdBy:{
-        type:mongoose.Schema.Types.ObjectId
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 })
 

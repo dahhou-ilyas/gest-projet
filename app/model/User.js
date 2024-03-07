@@ -3,10 +3,18 @@ const bcrypt=require('bcrypt')
 
 const UserSchema=new mongoose.Schema({
     name: String,
-    email: String,
-    password: String,
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
     tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
-    groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }]
+    groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
+    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }]
 })
 
 UserSchema.pre('save',async function(next){
