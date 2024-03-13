@@ -41,5 +41,12 @@ module.exports={
             console.error(error);
             res.status(500).json({error:"error in database"});
         }
+    },
+    getAllProject:async (req,res)=>{
+        const projects=Project.find();
+        if(!projects){
+            res.status(404).json({message:"projects not found"})
+        }
+        res.status(200).json(projects)
     }
 }
