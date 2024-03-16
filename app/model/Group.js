@@ -1,4 +1,5 @@
 const mongoose=require('mongoose');
+
 const GroupSchema=new mongoose.Schema({
     name: {
         type: String,
@@ -16,7 +17,11 @@ const GroupSchema=new mongoose.Schema({
     invitationToken: {
         type: String,
         unique: true
-    }
+    },
+    projects: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project'
+    }]
 });
 
 GroupSchema.pre('save',async function (next){
@@ -32,8 +37,6 @@ GroupSchema.pre('save',async function (next){
         next(error)
     }
 })
-
-
 
 const Group=mongoose.model('Group',GroupSchema);
 

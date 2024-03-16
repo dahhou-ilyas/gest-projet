@@ -10,6 +10,10 @@ const taskSchema =new mongoose.Schema({
         type: String,
         enum: ['TODO', 'INPROGRESS', 'DONE'],
         default: 'TODO'
+    },
+    project: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project'
     }
 });
 
