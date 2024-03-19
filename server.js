@@ -6,7 +6,9 @@ const server=http.createServer(app)
 
 const PORT=process.env.PORT || '8080';
 
-mongoose.connect("mongodb://127.0.0.1:27017/gest-projet")
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/gest-projet';
+
+mongoose.connect(MONGODB_URI)
 .then(()=>{
     server.listen(PORT,()=>{
         console.log(`app listen in http://localhost:8080`);
