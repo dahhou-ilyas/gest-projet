@@ -3,11 +3,13 @@ const request = require("supertest");
 const app=require("../app/index");
 const jwt = require('jsonwebtoken');
 const User = require("../app/model/User");
+const Group = require("../app/model/Group");
 
 require("dotenv").config();
 
 let createdUserId;
 let globalToken;
+let groupCreted;
 
 beforeAll(async () => {
     await mongoose.connect("mongodb://127.0.0.1:27017/gest-projet");
@@ -16,6 +18,9 @@ beforeAll(async () => {
 afterAll(async () => {
   if (createdUserId) {
     await User.findByIdAndDelete(createdUserId);
+  }
+  if(groupCreted){
+    await Group.findByIdAndDelete(groupCreted._id)
   }
   await mongoose.connection.close();
     
@@ -104,7 +109,6 @@ describe("GET /users/login" ,()=>{
 
 describe('User Routes', ()=>{
     it('devrait obtenir un utilisateur existant avec succès lorsque l\'utilisateur est authentifié', async () => {
-      console.log(createdUserId);
         const response = await request(app)
           .get(`/users/${createdUserId}`)
           .set('Cookie', [`${globalToken}`]);
@@ -128,7 +132,35 @@ describe("Group Routes",()=>{
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty("message","Groupe créé avec succès.");
       expect(response.body.group).toHaveProperty("name", groupName);
-
+      groupCreted=response.body.group
     })
   })
+
+  describe("POST /groups/:groupId/invite",()=>{
+    it("devrait générer un lien d\'invitation avec succès et renvoyer un code d\'état 200",async ()=>{
+      const groupId=groupCreted._id
+      const email="65e19c89130aa325d38846c2"
+
+      const response = await request(app)
+            .post(`/groups/${groupId}/invite`)
+            .set('Cookie', [`${globalToken}`])
+            .send({ email });
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('message', 'Lien d\'invitation généré avec succès.');
+    })
+  })
+
+  it('devrait accepter une invitation avec succès et renvoyer un code d\'état 200', async () => {
+    // j'ai retirer le tocken depuit la base de donné j'ai déja _id dans groupCreted objet
+    const invitationToken = 'valid_invitation_token';
+    const response = await request(app)
+        .get(`/groups/invite?token=${invitationToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('message', 'Vous avez été ajouté au groupe avec succès.');
+});
 })
+
+// "il faut ajouter les test des cas d'échec"
+
+// je doit changer le dataType inviteToket il faut la render array et apré certaine temps de chaque ajout d'un token il faut le supprimé

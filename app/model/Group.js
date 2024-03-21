@@ -16,7 +16,6 @@ const GroupSchema=new mongoose.Schema({
     },
     invitationToken: {
         type: String,
-        unique: true
     },
     projects: [{
         type: mongoose.Schema.Types.ObjectId,
