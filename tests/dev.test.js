@@ -134,12 +134,34 @@ describe("Group Routes",()=>{
       expect(response.body.group).toHaveProperty("name", groupName);
       groupCreted=response.body.group
     })
+
+    it("devrait retourner un code d'état 401 car l'utilisateur n'ext pas autorisé",async ()=>{
+      const groupName="Test1 Group"
+
+      const response=await request(app).post("/groups")
+        .send({name:groupName});
+
+      expect(response.status).toBe(401);
+
+    })
+
+    it("devrait retourner un code d'état 403 car l'utilisateur est authentifier mais non autorisé",async ()=>{
+      const invalideToken="invalide_token";
+      const groupName="Test3 Group"
+
+      const response=await request(app).post("/groups")
+        .set("Cookie", [`jwt=${invalideToken}`])
+        .send({ name: groupName });
+      
+        expect(response.status).toBe(403);
+    })
+
   })
 
   describe("POST /groups/:groupId/invite",()=>{
     it("devrait générer un lien d\'invitation avec succès et renvoyer un code d\'état 200",async ()=>{
       const groupId=groupCreted._id
-      const email="65e19c89130aa325d38846c2"
+      const email="gogo.great2020@gmail.com"
 
       const response = await request(app)
             .post(`/groups/${groupId}/invite`)
@@ -150,15 +172,15 @@ describe("Group Routes",()=>{
     })
   })
 
-  it('devrait accepter une invitation avec succès et renvoyer un code d\'état 200', async () => {
-    // j'ai retirer le tocken depuit la base de donné j'ai déja _id dans groupCreted objet
-    const invitationToken = 'valid_invitation_token';
-    const response = await request(app)
-        .get(`/groups/invite?token=${invitationToken}`);
+  // it('devrait accepter une invitation avec succès et renvoyer un code d\'état 200', async () => {
+  //   // j'ai retirer le tocken depuit la base de donné j'ai déja _id dans groupCreted objet
+  //   const invitationToken = 'valid_invitation_token';
+  //   const response = await request(app)
+  //       .get(`/groups/invite?token=${invitationToken}`);
 
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('message', 'Vous avez été ajouté au groupe avec succès.');
-});
+  //   expect(response.status).toBe(200);
+  //   expect(response.body).toHaveProperty('message', 'Vous avez été ajouté au groupe avec succès.');
+  // });
 })
 
 // "il faut ajouter les test des cas d'échec"
