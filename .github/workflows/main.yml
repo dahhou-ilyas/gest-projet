@@ -26,7 +26,7 @@ jobs:
       run: npm test
       
     - name: Build Docker image
-      run: docker build -t dahhouilyas/gest_project:${{ github.sha[0:4] }} .
+      run: docker build -t dahhouilyas/gest_project:${GITHUB_SHA::4} .
       
     - name: Login to DockerHub
       uses: docker/login-action@v2
@@ -35,4 +35,4 @@ jobs:
         password: ${{ secrets.DOCKER_KEY }}
       
     - name: Push Docker image to DockerHub
-      run: docker push dahhouilyas/gest_projet:${{ github.sha[0:4] }}
+      run: docker push dahhouilyas/gest_projet:${GITHUB_SHA::4}
