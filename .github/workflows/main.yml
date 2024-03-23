@@ -35,4 +35,4 @@ jobs:
         password: ${{ secrets.DOCKER_KEY }}
       
     - name: Push Docker image to DockerHub
-      run: docker push dahhouilyas/gest_projet:latest
+      run: docker push dahhouilyas/gest_projet:$(echo "${{ github.sha }}" | cut -c1-4)
