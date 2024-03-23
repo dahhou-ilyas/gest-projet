@@ -16,7 +16,7 @@ jobs:
         options: --name mongodb-instance
 
     env:
-      IMAGE_TAG: ${{ github.sha[0:4] }}
+      IMAGE_TAG: ${GITHUB_SHA::4}
 
     steps:
     - name: Checkout repository
