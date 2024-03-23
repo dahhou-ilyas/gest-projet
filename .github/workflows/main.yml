@@ -1,0 +1,38 @@
+name: project management
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+        options: --name mongodb-instance
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
+      
+    - name: Build Docker image
+      run: docker build -t dahhouilyas/gestProject:${{ github.sha }} .
+      
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_KEY }}
+      
+    - name: Push Docker image to DockerHub
+      run: docker push dahhouilyas/gestProjet:latest
