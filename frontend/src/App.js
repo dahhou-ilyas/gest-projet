@@ -1,17 +1,34 @@
 import "./App.css"
-import { Routes, Route , Navigate,} from 'react-router-dom';
+import { useNavigate } from "react-router";
+import { Routes, Route} from 'react-router-dom';
 import KanbanBoard from "./components/KanbanBoard";
-
+import {jwtDecode} from "jwt-decode"
 import Login from "./components/Login/Login";
 import { useUser } from "./context";
+import { useEffect } from "react";
+import Cookies from "js-cookie";
 
-const ProtectedRoute=({children})=>{
-  const {user,setUser}=useUser();
-  if(user){
+const ProtectedRoute = ({ children }) => {
+  const navigate=useNavigate();
+  
+  const { user, setUser } = useUser();
+  useEffect(() => {
+    const token = Cookies.get('jwt');
+    if (!token ) {
+      navigate('/login');
+    } else if (JSON.stringify(user) === '{}') {
+      try {
+        const decoded = jwtDecode(token);
+        setUser(decoded);
+      } catch (error) {
+        setUser({});
+      }
+    }
+  }, [user, setUser]);
+  if (user.name) {
     return children;
-  }
-  else {
-    return <Navigate to={"/login"}/>
+  } else {
+    return null;
   }
 }
 

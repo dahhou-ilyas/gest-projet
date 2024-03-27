@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import "./Login.css"
 import Cookies from 'js-cookie';
+import { useNavigate } from "react-router";
 import {jwtDecode} from "jwt-decode"
 import { useUser } from "../../context";
-import { Navigate } from "react-router-dom";
 
 function Login() {
+  const navigate=useNavigate();
+
   const {user,setUser}=useUser();
 
   const [email,setEmail]=useState('');
@@ -38,7 +40,7 @@ function Login() {
     
   }
   if (redirect) {
-    return <Navigate to={'/'} replace/>;
+    navigate('/')
   }
 
 
@@ -73,6 +75,8 @@ function Login() {
           </form>
           </div>
             {/* <p>You don't have an account? <Link to="/Signup" className='link'>Sign Up here</Link></p> */}
+            
+
             
 
       </div>
