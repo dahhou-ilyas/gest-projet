@@ -66,6 +66,9 @@ module.exports={
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
+    },
+    logout:(req,res)=>{
+        res.cookie('jwt','').json("ok");
     }
 
 }

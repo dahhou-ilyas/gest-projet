@@ -42,7 +42,7 @@ function bgcolorChange(props) {
 
 export default function Task({ task, index }) {
     return (
-      <Draggable draggableId={`${task.id}`} key={task.id} index={index}>
+      <Draggable draggableId={`${task._id}`} key={task._id} index={index}>
         {(provided, snapshot) => (
           <Container
             {...provided.draggableProps}
@@ -53,7 +53,7 @@ export default function Task({ task, index }) {
             <div  style={{ display: "flex", justifyContent: "start", padding: 2 }}>
               <span className='flex justify-between'>
                 <small>
-                  #{task.id}
+            
                   {"  "}
                 </small>
                  <FaRegEdit/>                
@@ -71,7 +71,7 @@ export default function Task({ task, index }) {
                 <div>
                   <Avatar
                     onClick={() => console.log(task)}
-                    src={"https://joesch.moe/api/v1/random?key=" + task.id}
+                    src={"https://joesch.moe/api/v1/random?key=" + task._id}
                   />
                 </div>
               </Icons>

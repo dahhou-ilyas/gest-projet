@@ -44,6 +44,7 @@ app.post('/users/login',async (req,res)=>{
         res.status(500).json({ message: error.message });
     }
 })
+
 app.post('/users/register',async (req,res)=>{
     try {
         const { name, email, password } = req.body;

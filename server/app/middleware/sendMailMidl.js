@@ -1,12 +1,13 @@
 const nodemail=require('nodemailer');
 
 
-const sendInvitationEmail=(recipientEmail, invitationLink)=>{
+const sendInvitationEmail=(recipientEmail, invitationLink,username)=>{
     const transporter=nodemail.createTransport({
         service:'gmail',
         host:'smtp.gmail.com',
         port:587,
         secure:false,
+        requireTLS: true, //new add 
         auth:{
             user:process.env.USER, //sender gamil
             pass:process.env.PASS
@@ -16,7 +17,7 @@ const sendInvitationEmail=(recipientEmail, invitationLink)=>{
         from:process.env.USER,
         to: recipientEmail,
         subject: 'FLOW APPLICATION',
-        text: `Vous avez été invité à rejoindre notre groupe ! Cliquez sur le lien suivant pour rejoindre : ${invitationLink}`
+        text: `Vous avez été invité à rejoindre notre groupe ! Cliquez sur le lien suivant pour rejoindre : ${invitationLink} \n ${username}`
     }
 
     transporter.sendMail(mailOptions, (error, info) => {

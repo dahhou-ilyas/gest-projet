@@ -8,7 +8,7 @@ const taskSchema =new mongoose.Schema({
     dueDate: Date,
     etatStatus: {
         type: String,
-        enum: ['TODO', 'INPROGRESS', 'DONE'],
+        enum: ['TODO', 'INREVIEW', 'DONE'],
         default: 'TODO'
     },
     project: {

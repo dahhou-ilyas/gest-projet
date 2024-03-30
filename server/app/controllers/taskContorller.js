@@ -1,13 +1,17 @@
 const User=require('../model/User');
 const Task=require('../model/Task');
-const comment=require('../model/comment');
+const Comment=require('../model/comment');
 const Project = require('../model/Project');
 
 module.exports={
     addTask:async (req,res)=>{
         try {
             const { title, description, assignedTo, dueDate, projectId } = req.body;
+            if(!assignedTo){
+                assignedTo=req.user.userId
+            }
             const project=await Project.findById(projectId).populate('group');
+            const user=await User.findById(assignedTo);
             if(!project){
                 res.json(404).json({message:"project not found"});
             }
@@ -20,8 +24,10 @@ module.exports={
                     dueDate
                 });
                 project.tasks.push(newTask._id);
+                user.tasks.push(newTask._id)
                 await project.save();
                 await newTask.save();
+                await user.save();
                 res.status(201).json(newTask)
             }
         } catch (error) {
@@ -79,6 +85,7 @@ module.exports={
                 return res.status(404).json({ message: 'Tâche non trouvée' });
             }
             const { content, author } = req.body;
+            //if author aparienne à la group de projet il peut commenter
             const newComment = new Comment({
                 content,
                 author,
@@ -87,7 +94,7 @@ module.exports={
             await newComment.save();
             res.status(201).json(newComment);
         } catch (error) {
-            console.error(err);
+            console.error(error);
             res.status(500).json({ message: 'Erreur lors de l\'ajout du commentaire à la tâche' });
         }
     }

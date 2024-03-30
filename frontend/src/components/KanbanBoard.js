@@ -3,155 +3,104 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import Column from "./Column";
 import Header from "./Header/Header";
+import { useUser } from "../context";
 
 function KanbanBoard() {
+    const { user } = useUser();
     const [completed, setCompleted] = useState([]);
     const [incomplete, setIncomplete] = useState([]);
     const [backlog, setBacklog] = useState([]);
     const [inReview, setInReview] = useState([]);
 
     useEffect(() => {
-        fetch("https://jsonplaceholder.typicode.com/todos")
+        fetch(`http://localhost:8080/users/${user.userId}/tasks`, {
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+        })
             .then((response) => response.json())
             .then((json) => {
-                setCompleted(json.filter((task) => task.completed));
-                setIncomplete(json.filter((task) => !task.completed));
+                // Filter tasks based on their status
+                setIncomplete(json.filter((task) => task.etatStatus === "TODO"));
+                setCompleted(json.filter((task) => task.etatStatus === "DONE"));
+                setInReview(json.filter((task) => task.etatStatus === "IN REVIEW"));
+                setBacklog(json.filter((task) => task.etatStatus === "BACKLOG"));
             });
-    }, []);
+    }, [user.userId]);
 
     const handleDragEnd = (result) => {
+        console.log(result);
         const { destination, source, draggableId } = result;
 
         if (!destination || source.droppableId === destination.droppableId) return;
 
+        const task = findItemById(draggableId);
+
+        // Remove the task from the source column
         deletePreviousState(source.droppableId, draggableId);
 
-        const task = findItemById(draggableId, [...incomplete, ...completed, ...inReview, ...backlog]);
-
+        // Add the task to the destination column
         setNewState(destination.droppableId, task);
     }
 
     function deletePreviousState(sourceDroppableId, taskId) {
-        // eslint-disable-next-line default-case
         switch (sourceDroppableId) {
             case "1":
-                setIncomplete(removeItemById(taskId, incomplete));
+                setIncomplete(prevState => removeItemById(taskId, prevState));
                 break;
             case "2":
-                setCompleted(removeItemById(taskId, completed));
+                setCompleted(prevState => removeItemById(taskId, prevState));
                 break;
             case "3":
-                setInReview(removeItemById(taskId, inReview));
+                setInReview(prevState => removeItemById(taskId, prevState));
                 break;
             case "4":
-                setBacklog(removeItemById(taskId, backlog));
+                setBacklog(prevState => removeItemById(taskId, prevState));
+                break;
+            default:
                 break;
         }
-
     }
 
     function setNewState(destinationDroppableId, task) {
-        let updatedTask;
-        // eslint-disable-next-line default-case
         switch (destinationDroppableId) {
             case "1":   // TO DO
-                updatedTask = { ...task, completed: false };
-                setIncomplete([updatedTask, ...incomplete]);
+                setIncomplete(prevState => [task, ...prevState]);
                 break;
             case "2":  // DONE
-                updatedTask = { ...task, completed: true };
-                setCompleted([updatedTask, ...completed]);
+                setCompleted(prevState => [task, ...prevState]);
                 break;
             case "3":  // IN REVIEW
-                updatedTask = { ...task, completed: false };
-                setInReview([updatedTask, ...inReview]);
+                setInReview(prevState => [task, ...prevState]);
                 break;
             case "4":  // BACKLOG
-                updatedTask = { ...task, completed: false };
-                setBacklog([updatedTask, ...backlog]);
+                setBacklog(prevState => [task, ...prevState]);
+                break;
+            default:
                 break;
         }
     }
 
-    function findItemById(id, array) {
-        return array.find((item) => item.id == id);
+    function findItemById(id) {
+        return [...incomplete, ...completed, ...inReview, ...backlog].find((item) => item._id === id);
     }
 
     function removeItemById(id, array) {
-        return array.filter((item) => item.id != id);
+        return array.filter((item) => item._id !== id);
     }
 
   return (
-        <>
-            <Header/>
-            
-            <DragDropContext onDragEnd={handleDragEnd}>        
-                    <h2 style={{textAlign:"center", color: "#ffff", margin: "25px"}}>KANBAN BOARD</h2>
-            
-                    {/* <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            flexDirection: "row",
-                            // width: "1300px",
-                            // margin: "0 auto"
-                        }}>
-                            <Droppable droppableId="1">
-                            {(provided, snapshot) => (
-                                <div ref={provided.innerRef} {...provided.droppableProps}>
-                                <Column title={"TO DO"} tasks={incomplete} id={"1"} />
-                                {provided.placeholder}
-                                </div>
-                            )}
-                            </Droppable>
-                            <Droppable droppableId="2">
-                            {(provided, snapshot) => (
-                                <div ref={provided.innerRef} {...provided.droppableProps}>
-                                <Column title={"DONE"} tasks={completed} id={"2"} />
-                                {provided.placeholder}
-                                </div>
-                            )}
-                            </Droppable>
-                            <Droppable droppableId="3">
-                            {(provided, snapshot) => (
-                                <div ref={provided.innerRef} {...provided.droppableProps}>
-                                <Column title={"IN REVIEW"} tasks={inReview} id={"3"} />
-                                {provided.placeholder}
-                                </div>
-                            )}
-                            </Droppable>
-                            <Droppable droppableId="4">
-                            {(provided, snapshot) => (
-                                <div ref={provided.innerRef} {...provided.droppableProps}>
-                                <Column title={"BACKLOG"} tasks={backlog} id={"4"} />
-                                {provided.placeholder}
-                                </div>
-                            )}
-                            </Droppable>
-                    </div> */}
-
-                    <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                flexDirection: "row",
-                                padding: "20px",
-                                
-                                
-                                // width: "1300px",
-                                // margin: "0 auto"
-                            }}
-                        >
-                            <Column title={"TO DO"} tasks={incomplete} id={"1"} />
-                            <Column title={"DONE"} tasks={completed} id={"2"} />
-                            <Column title={"IN REVIEW"} tasks={inReview} id={"3"} />
-                            <Column title={"BACKLOG"} tasks={backlog} id={"4"} />
-                    </div>
-                </DragDropContext>
-        
-                </>
+    <>
+    <Header />
+    <DragDropContext onDragEnd={handleDragEnd}>
+        <h2 style={{ textAlign: "center", color: "#ffff", margin: "25px" }}>KANBAN BOARD</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexDirection: "row", padding: "20px" }}>
+            <Column title={"TO DO"} tasks={incomplete} id={"1"} />
+            <Column title={"DONE"} tasks={completed} id={"2"} />
+            <Column title={"IN REVIEW"} tasks={inReview} id={"3"} />
+            <Column title={"BACKLOG"} tasks={backlog} id={"4"} />
+        </div>
+    </DragDropContext>
+</>
 
   )
 }

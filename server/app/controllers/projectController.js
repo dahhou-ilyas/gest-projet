@@ -28,11 +28,11 @@ module.exports={
     getProject:async (req,res)=>{
         const userId=req.params.userId;
         try {
-            const user=User.findById(userId);
+            const user=await User.findById(userId);
             if(!user){
                 res.status(404).json({message:"user not found"});
             }
-            const projects=Project.find({createdBy:userId});
+            const projects=await Project.find({createdBy:userId});
             if(!projects){
                 res.status(404).json({message:"not project for this user"});
             }

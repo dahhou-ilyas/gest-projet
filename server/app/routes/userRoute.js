@@ -8,5 +8,6 @@ router.get('/:userId',userController.getUser);
 router.get('/:userId/tasks',userController.getTasksForUser)
 router.put('/:userId',userController.updateUser);
 router.delete('/:userId',userController.deleteUser);
+router.post('/logout',userController.logout)
 
 module.exports = router;
