@@ -27,6 +27,33 @@ function KanbanBoard() {
             });
     }, [user.userId]);
 
+    useEffect(() => {
+        // Update tasks in the backend when the local state changes
+        updateTasks(completed, "DONE");
+        updateTasks(incomplete, "TODO");
+        updateTasks(backlog, "BACKLOG");
+        updateTasks(inReview, "INREVIEW");
+    }, [completed, incomplete, backlog, inReview]);
+
+    const updateTasks = (tasks, etatStatus) => {
+        tasks.forEach(task => {
+            fetch(`http://localhost:8080/tasks/${task._id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ etatStatus })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update task');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating task:', error);
+            });
+        });
+    };
+
     const handleDragEnd = (result) => {
         console.log(result);
         const { destination, source, draggableId } = result;
