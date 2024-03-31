@@ -13,7 +13,7 @@ jobs:
         image: mongo
         ports:
           - 27017:27017
-        options: --name mongodb-instance -v ${{ github.workspace }}/server:/data/db
+        options: --name mongodb-instance
 
     steps:
     - name: Checkout repository
