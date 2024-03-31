@@ -11,7 +11,7 @@ let createdUserId;
 let globalToken;
 let groupCreted;
 
-beforeAll(async () => {
+beforeEach(async () => {
     await mongoose.connect("mongodb://127.0.0.1:27017/gest-projet");
 });
 
