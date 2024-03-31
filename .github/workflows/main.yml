@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     services:
       mongodb:
         image: mongo
@@ -16,27 +17,28 @@ jobs:
         options: --name mongodb-instance
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./server
+      - name: Access server directory
+        run: cd server
 
-    - name: Run tests
-      run: npm test
-      working-directory: ./server
-      
-    - name: Build Docker image
-      run: |
-        TAG=$(echo $IMAGE_TAG | cut -c1-4)
-        docker build -t dahhouilyas/gest_project:${GITHUB_SHA::4} ./server
-      
-    - name: Login to DockerHub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_KEY }}
-      
-    - name: Push Docker image to DockerHub
-      run: docker push dahhouilyas/gest_project:${GITHUB_SHA::4}
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build Docker image
+        run: |
+          TAG=$(echo $IMAGE_TAG | cut -c1-4)
+          docker build -t dahhouilyas/gest_project:${GITHUB_SHA::4} .
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_KEY }}
+
+      - name: Push Docker image to DockerHub
+        run: docker push dahhouilyas/gest_project:${GITHUB_SHA::4}
