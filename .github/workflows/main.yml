@@ -14,7 +14,6 @@ jobs:
         ports:
           - 27017:27017
         options: --name mongodb-instance
-      working-directory: ./server
 
     steps:
     - name: Checkout repository
