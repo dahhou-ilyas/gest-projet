@@ -6,7 +6,7 @@ const server=http.createServer(app)
 
 const PORT=process.env.PORT || '8080';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/gest-projet';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/gest-projet';
 
 mongoose.connect(MONGODB_URI)
 .then(()=>{
