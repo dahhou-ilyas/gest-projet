@@ -92,7 +92,7 @@ describe("GET /users/login" ,()=>{
 
     it('devrait retourner un message d\'erreur avec un code d\'état 401 si le mot de passe est incorrect', async () => {
         const userData = {
-          email: 'eger@gmail.com',
+          email: 'taha.belhaj@gmail.com',
           password: 'mauvaismotdepasse'
         };
     

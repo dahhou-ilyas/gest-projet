@@ -24,16 +24,16 @@ const GroupSchema=new mongoose.Schema({
 });
 
 GroupSchema.pre('save',async function (next){
-    if(!this.isNew){
+    if (!this.isNew) {
         return next();
     }
     try {
-        if(!this.users.includes(this.cretedBy)){
-            this.users.push(this.cretedBy)
+        if (!this.users.includes(this.createdBy)) { // Correction de la faute de frappe de `cretedBy` à `createdBy`
+            this.users.push(this.createdBy); // Correction de la faute de frappe de `cretedBy` à `createdBy`
         }
-        next();
+        next(); // Déplacer cet appel après l'ajout de l'utilisateur créateur au tableau `users`
     } catch (error) {
-        next(error)
+        next(error);
     }
 })
 
